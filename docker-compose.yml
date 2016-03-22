@@ -1,0 +1,163 @@
+client:
+    container_name: client
+    hostname: client
+    extends:
+      file: common.yml
+      service: client
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    links:
+        - master1
+        - master2
+        - master3
+    command:
+        - ./elasticsearch
+        - -Des.node.name=client
+        - -Des.node.client=true
+        - -Des.node.master=false
+        - -Des.node.data=false
+        - -Des.discovery.zen.ping.unicast.hosts=master1,master2,master3
+
+data1:
+    container_name: data1
+    hostname: data1
+    extends:
+      file: common.yml
+      service: data
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    links:
+        - master1
+        - master2
+        - master3
+    command:
+        - ./elasticsearch
+        - -Des.node.name=data1
+        - -Des.node.master=false
+        - -Des.discovery.zen.ping.unicast.hosts=master1,,master2,master3
+
+data2:
+    container_name: data2
+    hostname: data2
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: data
+    links:
+        - master1
+        - master2
+        - master3
+    command:
+        - ./elasticsearch
+        - -Des.node.name=data2
+        - -Des.node.master=false
+        - -Des.discovery.zen.ping.unicast.hosts=master1,master2,master3
+
+
+data3:
+    container_name: data3
+    hostname: data3
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: data
+    links:
+        - master1
+        - master2
+        - master3
+    command:
+        - ./elasticsearch
+        - -Des.node.name=data3
+        - -Des.node.master=false
+        - -Des.discovery.zen.ping.unicast.hosts=master1,master2,master3
+
+
+data4:
+    container_name: data4
+    hostname: data4
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: data
+    links:
+        - master1
+        - master2
+        - master3
+    command:
+        - ./elasticsearch
+        - -Des.node.name=data4
+        - -Des.node.master=false
+        - -Des.discovery.zen.ping.unicast.hosts=master1,master2,master3
+
+
+data5:
+    container_name: data5
+    hostname: data5
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: data
+    links:
+        - master1
+        - master2
+        - master3
+    command:
+        - ./elasticsearch
+        - -Des.node.name=data5
+        - -Des.node.master=false
+        - -Des.discovery.zen.ping.unicast.hosts=master1,master2,master3
+
+
+master1:
+    container_name: master1
+    hostname: master1
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: master
+    command: ./elasticsearch --node.data false --node.master true --node.name master1 --es.discovery.zen.minimum_master_nodes=2
+
+
+master2:
+    container_name: master2
+    hostname: master2
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: master
+    command: ./elasticsearch --node.data false --node.master true --node.name master2 --es.discovery.zen.minimum_master_nodes=2
+
+
+master3:
+    container_name: master3
+    hostname: master3
+    volumes:
+        - ./data:/data
+        - ./config:/config
+    extends:
+      file: common.yml
+      service: master
+    command: ./elasticsearch --node.data false --node.master true --node.name master3 --es.discovery.zen.minimum_master_nodes=2
+
+kibana:
+    container_name: kibana
+    hostname: kibana
+    extends:
+      file: common.yml
+      service: kibana
+    links:
+        - client
